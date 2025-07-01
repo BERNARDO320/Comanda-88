@@ -1,0 +1,930 @@
+<html class="scroll-smooth" lang="pt-BR">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Sistema de Comanda para Restaurante e Bar - Completo
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Roboto', sans-serif;
+    }
+    /* Scrollbar for order list */
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: rgba(107, 114, 128, 0.5);
+      border-radius: 3px;
+    }
+  </style>
+ </head>
+ <body class="bg-gray-50 min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+    <div class="flex items-center space-x-3">
+     <img alt="Logo do restaurante e bar, um copo de cerveja estilizado com talheres cruzados" class="w-12 h-12 rounded-full" height="48" src="https://storage.googleapis.com/a1aa/image/b007b27f-7cc8-468a-0c4b-564667442e6b.jpg" width="48"/>
+     <h1 class="text-2xl font-bold text-gray-800 select-none">
+      Comanda R&amp;B
+     </h1>
+    </div>
+    <nav class="hidden md:flex space-x-6 text-gray-700 font-semibold">
+     <button class="hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition" id="btn-new-order">
+      Nova Comanda
+     </button>
+     <button class="hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition" id="btn-orders">
+      Comandas Ativas
+     </button>
+     <button class="hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition" id="btn-menu">
+      Cardápio
+     </button>
+     <button class="hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition" id="btn-products">
+      Produtos
+     </button>
+     <button class="hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition" id="btn-clients">
+      Clientes
+     </button>
+     <button class="hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition" id="btn-reports">
+      Relatórios
+     </button>
+     <button class="hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition" id="btn-logout">
+      Sair
+     </button>
+    </nav>
+    <button class="md:hidden text-gray-700 hover:text-indigo-600 focus:outline-none focus:text-indigo-600" id="btn-menu-mobile">
+     <i class="fas fa-bars fa-lg">
+     </i>
+    </button>
+   </div>
+   <!-- Mobile menu -->
+   <nav class="hidden md:hidden bg-white border-t border-gray-200" id="mobile-menu">
+    <div class="flex flex-col space-y-1 px-4 py-2 text-gray-700 font-semibold">
+     <button class="text-left hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition py-2" id="btn-new-order-mobile">
+      Nova Comanda
+     </button>
+     <button class="text-left hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition py-2" id="btn-orders-mobile">
+      Comandas Ativas
+     </button>
+     <button class="text-left hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition py-2" id="btn-menu-mobile-btn">
+      Cardápio
+     </button>
+     <button class="text-left hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition py-2" id="btn-products-mobile">
+      Produtos
+     </button>
+     <button class="text-left hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition py-2" id="btn-clients-mobile">
+      Clientes
+     </button>
+     <button class="text-left hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition py-2" id="btn-reports-mobile">
+      Relatórios
+     </button>
+     <button class="text-left hover:text-indigo-600 focus:outline-none focus:text-indigo-600 transition py-2" id="btn-logout-mobile">
+      Sair
+     </button>
+    </div>
+   </nav>
+  </header>
+
+  <!-- Login Modal -->
+  <div class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50" id="modal-login">
+   <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+    <h2 class="text-2xl font-bold mb-6 text-indigo-700 flex items-center gap-2 justify-center">
+     <i class="fas fa-user-lock"></i> Login do Funcionário
+    </h2>
+    <form id="login-form" class="flex flex-col gap-4">
+     <input autocomplete="username" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="login-username" placeholder="Usuário" required="" type="text"/>
+     <input autocomplete="current-password" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="login-password" placeholder="Senha" required="" type="password"/>
+     <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500" type="submit">
+      Entrar
+     </button>
+    </form>
+    <p class="mt-4 text-center text-gray-600 text-sm select-none">Usuários de exemplo: admin / senha: 1234</p>
+   </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row gap-6 hidden" id="main-content">
+   <!-- Left panel: Cardápio -->
+   <section class="md:w-1/3 bg-white rounded-lg shadow p-4 flex flex-col overflow-y-auto max-h-[80vh]" id="menu-section">
+    <h2 class="text-xl font-bold mb-4 text-indigo-700 flex items-center gap-2">
+     <i class="fas fa-utensils"></i> Cardápio
+    </h2>
+    <div class="flex flex-col space-y-4" id="menu-list">
+     <!-- Menu items will be rendered here -->
+    </div>
+   </section>
+
+   <!-- Center panel: Comanda ativa -->
+   <section class="md:w-2/3 bg-white rounded-lg shadow p-4 flex flex-col" id="order-section">
+    <div class="flex justify-between items-center mb-4">
+     <h2 class="text-xl font-bold text-indigo-700 flex items-center gap-2">
+      <i class="fas fa-receipt"></i> Comanda Ativa
+     </h2>
+     <button class="text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-400 rounded px-3 py-1 border border-red-600 transition disabled:opacity-50" disabled="" id="btn-clear-order">
+      <i class="fas fa-trash-alt"></i> Limpar
+     </button>
+    </div>
+    <form class="flex flex-col flex-grow overflow-y-auto" id="order-form">
+     <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+       <label class="block text-gray-700 font-semibold mb-1" for="table-number">Número da Mesa</label>
+       <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="table-number" min="1" name="table-number" placeholder="Ex: 12" required="" type="number"/>
+      </div>
+      <div>
+       <label class="block text-gray-700 font-semibold mb-1" for="client-select">Cliente (opcional)</label>
+       <select class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="client-select" name="client-select">
+        <option value="">-- Nenhum --</option>
+       </select>
+      </div>
+     </div>
+     <div class="flex-grow overflow-y-auto scrollbar-thin border border-gray-200 rounded p-2 mb-4" style="min-height: 200px;">
+      <table class="w-full text-left text-gray-800">
+       <thead class="border-b border-gray-300">
+        <tr>
+         <th class="py-2 px-1 w-1/2">Produto</th>
+         <th class="py-2 px-1 w-1/6 text-center">Qtd</th>
+         <th class="py-2 px-1 w-1/6 text-right">Preço Unit.</th>
+         <th class="py-2 px-1 w-1/6 text-right">Subtotal</th>
+         <th class="py-2 px-1 w-12"></th>
+        </tr>
+       </thead>
+       <tbody class="divide-y divide-gray-200" id="order-items">
+        <tr class="text-center text-gray-500">
+         <td class="py-6" colspan="5">Nenhum item adicionado.</td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <div class="mb-4">
+      <label class="block text-gray-700 font-semibold mb-1" for="payment-method">Forma de Pagamento</label>
+      <select class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="payment-method" name="payment-method" required>
+       <option value="">Selecione</option>
+       <option value="dinheiro">Dinheiro</option>
+       <option value="cartao-debito">Cartão Débito</option>
+       <option value="cartao-credito">Cartão Crédito</option>
+       <option value="pix">PIX</option>
+       <option value="outro">Outro</option>
+      </select>
+     </div>
+     <div class="flex justify-between items-center border-t border-gray-300 pt-3">
+      <div class="text-lg font-semibold text-gray-900">
+       Total: <span id="order-total">R$ 0,00</span>
+      </div>
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50" disabled="" id="btn-submit-order" type="submit">
+       <i class="fas fa-check-circle mr-2"></i> Finalizar Comanda
+      </button>
+     </div>
+    </form>
+   </section>
+  </main>
+
+  <!-- Produtos Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bg-white rounded-lg shadow my-6 hidden" id="products-section">
+   <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-indigo-700 flex items-center gap-2">
+     <i class="fas fa-box-open"></i> Cadastro de Produtos
+    </h2>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500" id="btn-add-product">
+     <i class="fas fa-plus"></i> Novo Produto
+    </button>
+   </div>
+   <div class="overflow-x-auto">
+    <table class="w-full text-left text-gray-800 text-sm border border-gray-300 rounded">
+     <thead class="bg-indigo-100 border-b border-indigo-300">
+      <tr>
+       <th class="py-2 px-3 border-r border-indigo-300">Nome</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Categoria</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Preço (R$)</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Imagem</th>
+       <th class="py-2 px-3 border-indigo-300 w-24">Ações</th>
+      </tr>
+     </thead>
+     <tbody id="products-table-body" class="divide-y divide-gray-200">
+      <!-- Produtos listados aqui -->
+     </tbody>
+    </table>
+   </div>
+  </section>
+
+  <!-- Clientes Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bg-white rounded-lg shadow my-6 hidden" id="clients-section">
+   <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-indigo-700 flex items-center gap-2">
+     <i class="fas fa-users"></i> Cadastro de Clientes
+    </h2>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500" id="btn-add-client">
+     <i class="fas fa-plus"></i> Novo Cliente
+    </button>
+   </div>
+   <div class="overflow-x-auto">
+    <table class="w-full text-left text-gray-800 text-sm border border-gray-300 rounded">
+     <thead class="bg-indigo-100 border-b border-indigo-300">
+      <tr>
+       <th class="py-2 px-3 border-r border-indigo-300">Nome</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Telefone</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Email</th>
+       <th class="py-2 px-3 border-indigo-300 w-24">Ações</th>
+      </tr>
+     </thead>
+     <tbody id="clients-table-body" class="divide-y divide-gray-200">
+      <!-- Clientes listados aqui -->
+     </tbody>
+    </table>
+   </div>
+  </section>
+
+  <!-- Comandas Ativas Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bg-white rounded-lg shadow my-6 hidden" id="active-orders-section">
+   <h2 class="text-xl font-bold text-indigo-700 flex items-center gap-2 mb-4">
+    <i class="fas fa-list"></i> Comandas Ativas
+   </h2>
+   <div class="overflow-x-auto max-h-[70vh] overflow-y-auto scrollbar-thin">
+    <table class="w-full text-left text-gray-800 text-sm border border-gray-300 rounded">
+     <thead class="bg-indigo-100 border-b border-indigo-300">
+      <tr>
+       <th class="py-2 px-3 border-r border-indigo-300">Mesa</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Cliente</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Itens</th>
+       <th class="py-2 px-3 border-r border-indigo-300">Total (R$)</th>
+       <th class="py-2 px-3 border-indigo-300 w-32">Ações</th>
+      </tr>
+     </thead>
+     <tbody id="active-orders-table-body" class="divide-y divide-gray-200">
+      <!-- Comandas ativas listadas aqui -->
+     </tbody>
+    </table>
+   </div>
+  </section>
+
+  <!-- Modal para confirmação de finalização -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50" id="modal-confirm">
+   <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+    <h3 class="text-xl font-bold mb-4 text-indigo-700 flex items-center gap-2">
+     <i class="fas fa-exclamation-triangle"></i> Confirmar Finalização
+    </h3>
+    <p class="mb-6 text-gray-700">
+     Deseja realmente finalizar esta comanda? Após finalizar, não será possível editar.
+    </p>
+    <div class="flex justify-end gap-4">
+     <button class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400" id="btn-cancel-modal">
+      Cancelar
+     </button>
+     <button class="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="btn-confirm-modal">
+      Confirmar
+     </button>
+    </div>
+   </div>
+  </div>
+
+  <!-- Modal para relatório -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4 overflow-auto" id="modal-report">
+   <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-xl font-bold mb-4 text-indigo-700 flex items-center gap-2">
+     <i class="fas fa-chart-line"></i> Relatório de Comandas Finalizadas
+    </h3>
+    <div class="text-gray-800 text-sm" id="report-content">
+     <p>Carregando relatório...</p>
+    </div>
+    <div class="flex justify-end mt-6">
+     <button class="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="btn-close-report">
+      Fechar
+     </button>
+    </div>
+   </div>
+  </div>
+
+  <!-- Modal para cadastro/edição de produto -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4 overflow-auto" id="modal-product">
+   <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+    <h3 class="text-xl font-bold mb-4 text-indigo-700 flex items-center gap-2" id="modal-product-title">
+     <i class="fas fa-box-open"></i> Novo Produto
+    </h3>
+    <form id="product-form" class="flex flex-col gap-4">
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="product-name">Nome do Produto</label>
+      <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="product-name" name="product-name" required="" type="text"/>
+     </div>
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="product-category">Categoria</label>
+      <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="product-category" name="product-category" required="" type="text"/>
+     </div>
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="product-price">Preço (R$)</label>
+      <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="product-price" name="product-price" min="0" step="0.01" required="" type="number"/>
+     </div>
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="product-image">URL da Imagem</label>
+      <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="product-image" name="product-image" placeholder="https://placehold.co/64x64" type="url"/>
+     </div>
+     <div class="flex justify-end gap-4">
+      <button class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400" id="btn-cancel-product" type="button">
+       Cancelar
+      </button>
+      <button class="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="btn-save-product" type="submit">
+       Salvar
+      </button>
+     </div>
+    </form>
+   </div>
+  </div>
+
+  <!-- Modal para cadastro/edição de cliente -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4 overflow-auto" id="modal-client">
+   <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+    <h3 class="text-xl font-bold mb-4 text-indigo-700 flex items-center gap-2" id="modal-client-title">
+     <i class="fas fa-user"></i> Novo Cliente
+    </h3>
+    <form id="client-form" class="flex flex-col gap-4">
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="client-name">Nome</label>
+      <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="client-name" name="client-name" required="" type="text"/>
+     </div>
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="client-phone">Telefone</label>
+      <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="client-phone" name="client-phone" type="tel" pattern="[\d\s()+-]{8,}" placeholder="(99) 99999-9999"/>
+     </div>
+     <div>
+      <label class="block text-gray-700 font-semibold mb-1" for="client-email">Email</label>
+      <input class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="client-email" name="client-email" type="email" placeholder="email@exemplo.com"/>
+     </div>
+     <div class="flex justify-end gap-4">
+      <button class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400" id="btn-cancel-client" type="button">
+       Cancelar
+      </button>
+      <button class="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="btn-save-client" type="submit">
+       Salvar
+      </button>
+     </div>
+    </form>
+   </div>
+  </div>
+
+  <!-- Modal para emissão de nota -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4 overflow-auto" id="modal-invoice">
+   <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-xl font-bold mb-4 text-indigo-700 flex items-center gap-2">
+     <i class="fas fa-file-invoice-dollar"></i> Nota Fiscal
+    </h3>
+    <div id="invoice-content" class="text-gray-800 text-sm">
+     <!-- Conteúdo da nota será gerado aqui -->
+    </div>
+    <div class="flex justify-end mt-6 gap-4">
+     <button class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400" id="btn-close-invoice">
+      Fechar
+     </button>
+     <button class="px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" id="btn-print-invoice">
+      <i class="fas fa-print mr-2"></i> Imprimir
+     </button>
+    </div>
+   </div>
+  </div>
+
+  <script>
+   // Dados simulados para usuários (funcionários)
+   const users = [
+     { username: 'admin', password: '1234', name: 'Administrador' },
+     { username: 'garcom1', password: 'abcd', name: 'Garçom 1' },
+     { username: 'garcom2', password: 'abcd', name: 'Garçom 2' }
+   ];
+
+   // Estado global
+   let currentUser = null;
+
+   // Produtos (inicialmente vazio, pode ser carregado do localStorage)
+   let products = JSON.parse(localStorage.getItem('products')) || [
+     { id: '1', name: 'Cerveja Long Neck', category: 'Bebidas', price: 8.50, image: 'https://storage.googleapis.com/a1aa/image/5f9a5342-4cac-48ef-21ed-3d958c2fae43.jpg' },
+     { id: '2', name: 'Refrigerante Lata', category: 'Bebidas', price: 5.00, image: 'https://storage.googleapis.com/a1aa/image/9e654d0f-8b3b-4211-573f-22d4bed3dbe8.jpg' },
+     { id: '3', name: 'Suco Natural', category: 'Bebidas', price: 7.00, image: 'https://storage.googleapis.com/a1aa/image/660c70eb-5f6b-452c-a305-b31fc0bd577b.jpg' },
+     { id: '4', name: 'Batata Frita', category: 'Entradas', price: 15.00, image: 'https://storage.googleapis.com/a1aa/image/30d51bb3-b9f4-4a30-9031-8d084cb38c4a.jpg' },
+     { id: '5', name: 'Bolinho de Bacalhau', category: 'Entradas', price: 25.00, image: 'https://storage.googleapis.com/a1aa/image/0027e2e9-2fd3-4626-7e08-918d370506fb.jpg' },
+     { id: '6', name: 'Coxinha', category: 'Entradas', price: 18.00, image: 'https://storage.googleapis.com/a1aa/image/054ccd59-8c19-49af-56e7-8561325dacc1.jpg' },
+     { id: '7', name: 'Picanha Grelhada', category: 'Pratos Principais', price: 55.00, image: 'https://storage.googleapis.com/a1aa/image/4dcde55e-cde3-4e03-ef9b-735f42ef103a.jpg' },
+     { id: '8', name: 'Filé de Frango', category: 'Pratos Principais', price: 40.00, image: 'https://storage.googleapis.com/a1aa/image/1859ebda-58c0-406c-ddfd-a0fdbec0b15c.jpg' },
+     { id: '9', name: 'Lasanha à Bolonhesa', category: 'Pratos Principais', price: 38.00, image: 'https://storage.googleapis.com/a1aa/image/7c522a5b-f89d-4c83-9c90-7b57c15f77d5.jpg' },
+     { id: '10', name: 'Pudim de Leite', category: 'Sobremesas', price: 12.00, image: 'https://storage.googleapis.com/a1aa/image/be629c64-7254-4d4f-0f1f-1c894d97eae8.jpg' },
+     { id: '11', name: 'Sorvete', category: 'Sobremesas', price: 10.00, image: 'https://storage.googleapis.com/a1aa/image/228610cc-9c79-4951-ad31-180772e045b0.jpg' },
+     { id: '12', name: 'Mousse de Maracujá', category: 'Sobremesas', price: 14.00, image: 'https://storage.googleapis.com/a1aa/image/54c3de44-37fc-4ca9-3df2-400fb240b73b.jpg' }
+   ];
+
+   // Clientes (inicialmente vazio, pode ser carregado do localStorage)
+   let clients = JSON.parse(localStorage.getItem('clients')) || [];
+
+   // Comandas ativas
+   let activeOrders = [];
+
+   // Comandas finalizadas para relatório
+   let finalizedOrders = JSON.parse(localStorage.getItem('finalizedOrders')) || [];
+
+   // Estado da comanda ativa (no formulário)
+   let currentOrder = {
+     tableNumber: null,
+     clientId: null,
+     items: [],
+     paymentMethod: null,
+   };
+
+   // Elementos
+   const modalLogin = document.getElementById('modal-login');
+   const loginForm = document.getElementById('login-form');
+   const loginUsername = document.getElementById('login-username');
+   const loginPassword = document.getElementById('login-password');
+
+   const mainContent = document.getElementById('main-content');
+
+   const menuSection = document.getElementById('menu-section');
+   const orderSection = document.getElementById('order-section');
+   const productsSection = document.getElementById('products-section');
+   const clientsSection = document.getElementById('clients-section');
+   const activeOrdersSection = document.getElementById('active-orders-section');
+
+   const btnNewOrder = document.getElementById('btn-new-order');
+   const btnOrders = document.getElementById('btn-orders');
+   const btnMenu = document.getElementById('btn-menu');
+   const btnProducts = document.getElementById('btn-products');
+   const btnClients = document.getElementById('btn-clients');
+   const btnReports = document.getElementById('btn-reports');
+   const btnLogout = document.getElementById('btn-logout');
+
+   const btnNewOrderMobile = document.getElementById('btn-new-order-mobile');
+   const btnOrdersMobile = document.getElementById('btn-orders-mobile');
+   const btnMenuMobileBtn = document.getElementById('btn-menu-mobile-btn');
+   const btnProductsMobile = document.getElementById('btn-products-mobile');
+   const btnClientsMobile = document.getElementById('btn-clients-mobile');
+   const btnReportsMobile = document.getElementById('btn-reports-mobile');
+   const btnLogoutMobile = document.getElementById('btn-logout-mobile');
+
+   const btnMenuMobile = document.getElementById('btn-menu-mobile');
+   const mobileMenu = document.getElementById('mobile-menu');
+
+   // Order form elements
+   const orderItemsTbody = document.getElementById('order-items');
+   const orderTotalEl = document.getElementById('order-total');
+   const btnSubmitOrder = document.getElementById('btn-submit-order');
+   const btnClearOrder = document.getElementById('btn-clear-order');
+   const inputTableNumber = document.getElementById('table-number');
+   const selectClient = document.getElementById('client-select');
+   const selectPaymentMethod = document.getElementById('payment-method');
+
+   // Products section elements
+   const productsTableBody = document.getElementById('products-table-body');
+   const btnAddProduct = document.getElementById('btn-add-product');
+   const modalProduct = document.getElementById('modal-product');
+   const modalProductTitle = document.getElementById('modal-product-title');
+   const productForm = document.getElementById('product-form');
+   const inputProductName = document.getElementById('product-name');
+   const inputProductCategory = document.getElementById('product-category');
+   const inputProductPrice = document.getElementById('product-price');
+   const inputProductImage = document.getElementById('product-image');
+   const btnCancelProduct = document.getElementById('btn-cancel-product');
+
+   // Clients section elements
+   const clientsTableBody = document.getElementById('clients-table-body');
+   const btnAddClient = document.getElementById('btn-add-client');
+   const modalClient = document.getElementById('modal-client');
+   const modalClientTitle = document.getElementById('modal-client-title');
+   const clientForm = document.getElementById('client-form');
+   const inputClientName = document.getElementById('client-name');
+   const inputClientPhone = document.getElementById('client-phone');
+   const inputClientEmail = document.getElementById('client-email');
+   const btnCancelClient = document.getElementById('btn-cancel-client');
+
+   // Active orders section elements
+   const activeOrdersTableBody = document.getElementById('active-orders-table-body');
+
+   // Modal confirm elements
+   const modalConfirm = document.getElementById('modal-confirm');
+   const btnCancelModal = document.getElementById('btn-cancel-modal');
+   const btnConfirmModal = document.getElementById('btn-confirm-modal');
+
+   // Modal report elements
+   const modalReport = document.getElementById('modal-report');
+   const reportContent = document.getElementById('report-content');
+   const btnCloseReport = document.getElementById('btn-close-report');
+
+   // Modal invoice elements
+   const modalInvoice = document.getElementById('modal-invoice');
+   const invoiceContent = document.getElementById('invoice-content');
+   const btnCloseInvoice = document.getElementById('btn-close-invoice');
+   const btnPrintInvoice = document.getElementById('btn-print-invoice');
+
+   // State for product editing
+   let editingProductId = null;
+
+   // State for client editing
+   let editingClientId = null;
+
+   // State for order being finalized (for modal confirm)
+   let orderToFinalize = null;
+
+   // State for active order editing (in active orders list)
+   let editingActiveOrderId = null;
+
+   // Show/hide mobile menu
+   btnMenuMobile.addEventListener('click', () => {
+     mobileMenu.classList.toggle('hidden');
+   });
+
+   // Navigation handlers
+   function hideAllSections() {
+     menuSection.classList.add('hidden');
+     orderSection.classList.add('hidden');
+     productsSection.classList.add('hidden');
+     clientsSection.classList.add('hidden');
+     activeOrdersSection.classList.add('hidden');
+   }
+
+   function showSection(section) {
+     hideAllSections();
+     if (section === 'menu') {
+       menuSection.classList.remove('hidden');
+       orderSection.classList.remove('hidden');
+     } else if (section === 'orders') {
+       activeOrdersSection.classList.remove('hidden');
+     } else if (section === 'new-order') {
+       menuSection.classList.remove('hidden');
+       orderSection.classList.remove('hidden');
+       clearOrder();
+     } else if (section === 'products') {
+       productsSection.classList.remove('hidden');
+       renderProductsTable();
+     } else if (section === 'clients') {
+       clientsSection.classList.remove('hidden');
+       renderClientsTable();
+     } else if (section === 'reports') {
+       openReportModal();
+     }
+     mobileMenu.classList.add('hidden');
+   }
+
+   btnNewOrder.addEventListener('click', () => showSection('new-order'));
+   btnOrders.addEventListener('click', () => showSection('orders'));
+   btnMenu.addEventListener('click', () => showSection('menu'));
+   btnProducts.addEventListener('click', () => showSection('products'));
+   btnClients.addEventListener('click', () => showSection('clients'));
+   btnReports.addEventListener('click', () => showSection('reports'));
+   btnLogout.addEventListener('click', logout);
+
+   btnNewOrderMobile.addEventListener('click', () => showSection('new-order'));
+   btnOrdersMobile.addEventListener('click', () => showSection('orders'));
+   btnMenuMobileBtn.addEventListener('click', () => showSection('menu'));
+   btnProductsMobile.addEventListener('click', () => showSection('products'));
+   btnClientsMobile.addEventListener('click', () => showSection('clients'));
+   btnReportsMobile.addEventListener('click', () => showSection('reports'));
+   btnLogoutMobile.addEventListener('click', logout);
+
+   // Login form submit
+   loginForm.addEventListener('submit', e => {
+     e.preventDefault();
+     const username = loginUsername.value.trim();
+     const password = loginPassword.value.trim();
+     const user = users.find(u => u.username === username && u.password === password);
+     if (user) {
+       currentUser = user;
+       logAction(`Login efetuado pelo usuário: ${user.username}`);
+       modalLogin.style.display = 'none';
+       mainContent.classList.remove('hidden');
+       showSection('new-order');
+       loginForm.reset();
+     } else {
+       alert('Usuário ou senha inválidos.');
+     }
+   });
+
+   // Logout
+   function logout() {
+     if (confirm('Deseja realmente sair do sistema?')) {
+       logAction(`Logout efetuado pelo usuário: ${currentUser.username}`);
+       currentUser = null;
+       mainContent.classList.add('hidden');
+       modalLogin.style.display = 'flex';
+       clearOrder();
+     }
+   }
+
+   // Log de ações (simples console + localStorage)
+   function logAction(message) {
+     const timestamp = new Date().toISOString();
+     const logEntry = `[${timestamp}] [${currentUser ? currentUser.username : 'N/A'}] ${message}`;
+     console.log(logEntry);
+     let logs = JSON.parse(localStorage.getItem('logs')) || [];
+     logs.push(logEntry);
+     localStorage.setItem('logs', JSON.stringify(logs));
+   }
+
+   // Render menu list grouped by category
+   function renderMenu() {
+     const menuList = document.getElementById('menu-list');
+     menuList.innerHTML = '';
+     // Group products by category
+     const categories = [...new Set(products.map(p => p.category))];
+     categories.forEach(category => {
+       const categoryDiv = document.createElement('div');
+       categoryDiv.classList.add('mb-6');
+       const h3 = document.createElement('h3');
+       h3.className = 'text-lg font-semibold text-gray-800 border-b border-indigo-300 pb-1 mb-2';
+       h3.textContent = category;
+       categoryDiv.appendChild(h3);
+
+       const ul = document.createElement('ul');
+       ul.className = 'space-y-2';
+
+       products.filter(p => p.category === category).forEach(product => {
+         const li = document.createElement('li');
+         li.className = 'flex justify-between items-center border border-gray-200 rounded p-2 hover:bg-indigo-50 cursor-pointer group';
+         li.setAttribute('tabindex', '0');
+         li.setAttribute('role', 'button');
+         li.setAttribute('aria-label', `Adicionar ${product.name} ao pedido`);
+         li.dataset.id = product.id;
+
+         li.innerHTML = `
+           <div class="flex items-center gap-3">
+             <img src="${product.image || 'https://placehold.co/64x64?text=Sem+Imagem'}" alt="Imagem do produto ${product.name}" class="w-16 h-16 rounded object-cover" width="64" height="64" />
+             <div>
+               <p class="font-semibold text-gray-900">${product.name}</p>
+               <p class="text-sm text-gray-600">${product.category}</p>
+             </div>
+           </div>
+           <div class="text-indigo-700 font-semibold group-hover:text-indigo-900">R$ ${product.price.toFixed(2).replace('.', ',')}</div>
+         `;
+
+         li.addEventListener('click', () => {
+           addItemToOrder(product);
+         });
+         li.addEventListener('keydown', e => {
+           if (e.key === 'Enter' || e.key === ' ') {
+             e.preventDefault();
+             addItemToOrder(product);
+           }
+         });
+
+         ul.appendChild(li);
+       });
+
+       categoryDiv.appendChild(ul);
+       menuList.appendChild(categoryDiv);
+     });
+   }
+
+   // Adiciona item ou incrementa quantidade
+   function addItemToOrder(product) {
+     if (!currentOrder.tableNumber) {
+       alert('Por favor, informe o número da mesa antes de adicionar itens.');
+       inputTableNumber.focus();
+       return;
+     }
+     const existingItem = currentOrder.items.find(i => i.id === product.id);
+     if (existingItem) {
+       existingItem.quantity++;
+     } else {
+       currentOrder.items.push({ ...product, quantity: 1 });
+     }
+     updateOrderUI();
+     logAction(`Item adicionado à comanda: ${product.name} (Mesa ${currentOrder.tableNumber})`);
+   }
+
+   // Atualiza a UI da comanda
+   function updateOrderUI() {
+     if (currentOrder.items.length === 0) {
+       orderItemsTbody.innerHTML = `
+         <tr class="text-center text-gray-500">
+           <td colspan="5" class="py-6">Nenhum item adicionado.</td>
+         </tr>
+       `;
+       btnSubmitOrder.disabled = true;
+       btnClearOrder.disabled = true;
+     } else {
+       orderItemsTbody.innerHTML = '';
+       currentOrder.items.forEach(item => {
+         const tr = document.createElement('tr');
+         tr.classList.add('border-b', 'border-gray-200', 'hover:bg-indigo-50', 'transition');
+
+         tr.innerHTML = `
+           <td class="py-2 px-1 font-semibold">${item.name}</td>
+           <td class="py-2 px-1 text-center">
+             <div class="inline-flex items-center border border-gray-300 rounded overflow-hidden">
+               <button class="px-2 py-1 text-indigo-600 hover:bg-indigo-100 focus:outline-none" data-action="decrease" aria-label="Diminuir quantidade do item ${item.name}"><i class="fas fa-minus"></i></button>
+               <input type="number" min="1" value="${item.quantity}" class="w-12 text-center border-l border-r border-gray-300 focus:outline-none" aria-label="Quantidade do item ${item.name}" />
+               <button class="px-2 py-1 text-indigo-600 hover:bg-indigo-100 focus:outline-none" data-action="increase" aria-label="Aumentar quantidade do item ${item.name}"><i class="fas fa-plus"></i></button>
+             </div>
+           </td>
+           <td class="py-2 px-1 text-right">R$ ${item.price.toFixed(2).replace('.', ',')}</td>
+           <td class="py-2 px-1 text-right font-semibold">R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}</td>
+           <td class="py-2 px-1 text-center">
+             <button class="text-red-600 hover:text-red-800 focus:outline-none" aria-label="Remover item ${item.name}" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+           </td>
+         `;
+
+         const btnDecrease = tr.querySelector('button[data-action="decrease"]');
+         const btnIncrease = tr.querySelector('button[data-action="increase"]');
+         const btnRemove = tr.querySelector('button[data-action="remove"]');
+         const inputQty = tr.querySelector('input[type="number"]');
+
+         btnDecrease.addEventListener('click', () => {
+           if (item.quantity > 1) {
+             item.quantity--;
+             updateOrderUI();
+             logAction(`Quantidade do item ${item.name} diminuída para ${item.quantity} (Mesa ${currentOrder.tableNumber})`);
+           }
+         });
+         btnIncrease.addEventListener('click', () => {
+           item.quantity++;
+           updateOrderUI();
+           logAction(`Quantidade do item ${item.name} aumentada para ${item.quantity} (Mesa ${currentOrder.tableNumber})`);
+         });
+         btnRemove.addEventListener('click', () => {
+           currentOrder.items = currentOrder.items.filter(i => i.id !== item.id);
+           updateOrderUI();
+           logAction(`Item removido da comanda: ${item.name} (Mesa ${currentOrder.tableNumber})`);
+         });
+         inputQty.addEventListener('change', (e) => {
+           let val = parseInt(e.target.value);
+           if (isNaN(val) || val < 1) val = 1;
+           item.quantity = val;
+           updateOrderUI();
+           logAction(`Quantidade do item ${item.name} alterada para ${item.quantity} (Mesa ${currentOrder.tableNumber})`);
+         });
+
+         orderItemsTbody.appendChild(tr);
+       });
+       btnSubmitOrder.disabled = false;
+       btnClearOrder.disabled = false;
+     }
+
+     // Atualiza total
+     const total = currentOrder.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+     orderTotalEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+   }
+
+   // Limpar comanda
+   function clearOrder() {
+     currentOrder = {
+       tableNumber: null,
+       clientId: null,
+       items: [],
+       paymentMethod: null,
+     };
+     inputTableNumber.value = '';
+     selectClient.value = '';
+     selectPaymentMethod.value = '';
+     updateOrderUI();
+     btnSubmitOrder.disabled = true;
+     btnClearOrder.disabled = true;
+   }
+
+   btnClearOrder.addEventListener('click', () => {
+     if (confirm('Deseja realmente limpar a comanda atual? Todos os itens serão removidos.')) {
+       clearOrder();
+       logAction('Comanda atual limpa');
+     }
+   });
+
+   // Atualiza número da mesa no estado
+   inputTableNumber.addEventListener('input', (e) => {
+     const val = e.target.value.trim();
+     if (val === '' || parseInt(val) < 1) {
+       currentOrder.tableNumber = null;
+     } else {
+       currentOrder.tableNumber = parseInt(val);
+     }
+     updateOrderUI();
+   });
+
+   // Atualiza cliente selecionado
+   selectClient.addEventListener('change', (e) => {
+     currentOrder.clientId = e.target.value || null;
+   });
+
+   // Atualiza forma de pagamento
+   selectPaymentMethod.addEventListener('change', (e) => {
+     currentOrder.paymentMethod = e.target.value || null;
+   });
+
+   // Finalizar comanda (abre modal)
+   document.getElementById('order-form').addEventListener('submit', (e) => {
+     e.preventDefault();
+     if (!currentOrder.tableNumber) {
+       alert('Informe o número da mesa antes de finalizar a comanda.');
+       inputTableNumber.focus();
+       return;
+     }
+     if (currentOrder.items.length === 0) {
+       alert('Adicione pelo menos um item para finalizar a comanda.');
+       return;
+     }
+     if (!currentOrder.paymentMethod) {
+       alert('Selecione a forma de pagamento.');
+       selectPaymentMethod.focus();
+       return;
+     }
+     orderToFinalize = JSON.parse(JSON.stringify(currentOrder));
+     openConfirmModal();
+   });
+
+   // Modal confirm handlers
+   function openConfirmModal() {
+     modalConfirm.classList.remove('hidden');
+     btnCancelModal.focus();
+   }
+   function closeConfirmModal() {
+     modalConfirm.classList.add('hidden');
+   }
+
+   btnCancelModal.addEventListener('click', () => {
+     closeConfirmModal();
+   });
+
+   btnConfirmModal.addEventListener('click', () => {
+     finalizeOrder();
+     closeConfirmModal();
+   });
+
+   // Finaliza a comanda: salva em finalizadas e limpa
+   function finalizeOrder() {
+     if (!orderToFinalize) return;
+     orderToFinalize.id = Date.now();
+     orderToFinalize.date = new Date().toISOString();
+     orderToFinalize.user = currentUser.username;
+     finalizedOrders.push(orderToFinalize);
+     localStorage.setItem('finalizedOrders', JSON.stringify(finalizedOrders));
+     logAction(`Comanda finalizada (Mesa ${orderToFinalize.tableNumber}, Cliente ${getClientNameById(orderToFinalize.clientId) || 'Nenhum'}, Total R$ ${orderToFinalize.items.reduce((acc,i)=>acc+i.price*i.quantity,0).toFixed(2)})`);
+
+     // Remove from activeOrders if exists
+     activeOrders = activeOrders.filter(o => o.id !== orderToFinalize.id);
+     saveActiveOrders();
+
+     // Gera nota fiscal
+     generateInvoice(orderToFinalize);
+
+     clearOrder();
+     orderToFinalize = null;
+     showSection('new-order');
+   }
+
+   // Gerar nota fiscal (exibir modal)
+   function generateInvoice(order) {
+     let client = getClientById(order.clientId);
+     let total = order.items.reduce((acc, i) => acc + i.price * i.quantity, 0);
+     let date = new Date(order.date);
+     let dateStr = date.toLocaleDateString('pt-BR');
+     let timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+     let html = `
+       <p><strong>Comanda Nº:</strong> ${order.id}</p>
+       <p><strong>Data:</strong> ${dateStr} ${timeStr}</p>
+       <p><strong>Mesa:</strong> ${order.tableNumber}</p>
+       <p><strong>Cliente:</strong> ${client ? client.name : 'Nenhum'}</p>
+       <p><strong>Atendente:</strong> ${order.user}</p>
+       <p><strong>Forma de Pagamento:</strong> ${formatPaymentMethod(order.paymentMethod)}</p>
+       <hr class="my-2" />
+       <table class="w-full text-left text-gray-800 text-sm border border-gray-300 rounded mb-2">
+         <thead class="bg-indigo-100 border-b border-indigo-300">
+           <tr>
+             <th class="py-1 px-2 border-r border-indigo-300">Produto</th>
+             <th class="py-1 px-2 border-r border-indigo-300 text-center">Qtd</th>
+             <th class="py-1 px-2 border-r border-indigo-300 text-right">Preço Unit.</th>
+             <th class="py-1 px-2 text-right">Subtotal</th>
+           </tr>
+         </thead>
+         <tbody>
+     `;
+
+     order.items.forEach(item => {
+       html += `
+         <tr>
+           <td class="py-1 px-2 border-r border-indigo-300">${item.name}</td>
+           <td class="py-1 px-2 border-r border-indigo-300 text-center">${item.quantity}</td>
+           <td class="py-1 px-2 border-r border-indigo-300 text-right">R$ ${item.price.toFixed(2).replace('.', ',')}</td>
+           <td class="py-1 px-2 text-right">R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}</td>
+         </tr>
+       `;
+     });
+
+     html += `
+         </tbody>
+       </table>
+       <p class="text-right font-semibold text-lg">Total: R$ ${total.toFixed(2).replace('.', ',')}</p>
+     `;
+
+     invoiceContent.innerHTML = html;
+     modalInvoice.classList.remove('hidden');
+     btnCloseInvoice.focus();
+   }
+
+   btnCloseInvoice.addEventListener('click', () => {
+     modalInvoice.classList.add('hidden');
+   });
+
+   btnPrintInvoice.addEventListener('click', () => {
+     const printWindow = window.open('', '', 'width=800,height=600');
+     printWindow.document.write('<html><head><title>Nota Fiscal</title>');
+     printWindow.document.write('<style>body{font-family: Arial, sans-serif; padding: 20px;} table{width: 100%; border-collapse: collapse;} th, td{border: 1px solid #ccc; padding: 8px;}</style>');
+     printWindow.document.write('</head><body>');
+     printWindow.document.write(invoiceContent.innerHTML);
+     printWindow.document.write('</body></html>
